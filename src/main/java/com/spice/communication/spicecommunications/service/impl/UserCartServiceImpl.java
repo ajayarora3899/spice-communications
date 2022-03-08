@@ -25,4 +25,12 @@ public class UserCartServiceImpl implements UserCartService {
         UserCartResponseVO userCartResponseVO = objectMapper.convertModelToVo(userCart);
         return userCartResponseVO ;
     }
+
+    @Override
+    public UserCartResponseVO fetchCartByUserId(Integer userId) {
+        UserCart userCart=null;
+        userCart = userCartDao.fetchByUserId(userId);
+        UserCartResponseVO userCartResponseVO=objectMapper.convertModelToVo(userCart);
+        return userCartResponseVO;
+    }
 }

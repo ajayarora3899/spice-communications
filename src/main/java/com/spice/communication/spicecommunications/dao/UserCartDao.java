@@ -10,4 +10,7 @@ public interface UserCartDao extends CrudRepository<UserCart,Integer>{
 
     @Query("select uc from UserCart uc where uc.cartId=?1")
     UserCart fetchByCartId(Integer cartId);
+
+    @Query("select uc from UserCart uc where uc.user.userId=?1")
+    UserCart fetchByUserId(Integer userId);
 }

@@ -30,6 +30,9 @@ public class UserResponseVO {
     @JsonProperty(value = "regOn")
     private Date registeredOn;
 
+    @JsonProperty(value = "cartId")
+    private Integer cartId;
+
     public UserResponseVO() {
     }
 
@@ -96,4 +99,8 @@ public class UserResponseVO {
     public void setRegisteredOn(Date registeredOn) {
         this.registeredOn = registeredOn;
     }
+
+    public Integer getCartId() {return cartId; }
+
+    public void setCartId(Integer cartId) {this.cartId = cartId;}
 }

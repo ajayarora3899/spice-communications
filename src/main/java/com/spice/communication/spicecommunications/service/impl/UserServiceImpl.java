@@ -7,6 +7,7 @@ import com.spice.communication.spicecommunications.service.exception.SpiceBaseEx
 import com.spice.communication.spicecommunications.service.vo.request.UserCartRequestVO;
 import com.spice.communication.spicecommunications.service.vo.request.UserRequestVO;
 import com.spice.communication.spicecommunications.service.vo.response.DropdownVO;
+import com.spice.communication.spicecommunications.service.vo.response.UserCartResponseVO;
 import com.spice.communication.spicecommunications.service.vo.response.UserResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -44,6 +45,8 @@ public class UserServiceImpl implements UserService {
         if (userResponseVO == null) {
             throw new SpiceBaseException(ErrorCodes.USER_NOT_REGISTERED.getMessage(), ErrorCodes.USER_NOT_REGISTERED.getErrorCode());
         }
+        UserCartResponseVO userCartResponseVO= userCartService.fetchCartByUserId((userResponseVO.getUserId()));
+        userResponseVO.setCartId(userCartResponseVO.getCartId());
         return userResponseVO;
     }
 
@@ -57,10 +60,15 @@ public class UserServiceImpl implements UserService {
         ResponseEntity<UserResponseVO> responseEntity = restTemplate.exchange(uri, HttpMethod.POST, httpEntity,
                 UserResponseVO.class);
         UserResponseVO userResponseVO = responseEntity.getBody();
-
-        UserCartRequestVO userCartRequestVO = new UserCartRequestVO();
-        userCartRequestVO.setUserId(userResponseVO.getUserId());
-        userCartService.allocateCart(userCartRequestVO);
+        if(userRequestVO.getUserId()==null) {
+            UserCartRequestVO userCartRequestVO = new UserCartRequestVO();
+            userCartRequestVO.setUserId(userResponseVO.getUserId());
+            UserCartResponseVO userCartResponseVO = userCartService.allocateCart(userCartRequestVO);
+            userResponseVO.setCartId(userCartResponseVO.getCartId());
+        }else {
+            UserCartResponseVO userCartResponseVO=userCartService.fetchCartByUserId(userRequestVO.getUserId());
+            userResponseVO.setCartId(userCartResponseVO.getCartId());
+        }
         return userResponseVO;
     }
 
